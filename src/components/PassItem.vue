@@ -1,18 +1,26 @@
 <script setup>
+import { computed } from 'vue';
+
 const props = defineProps(['index', 'password'])
-const emit = defineEmits(['copy', 'delete'])
+const emit = defineEmits(['copy', 'on-delete'])
 
 const copyPassword = () => {
 	navigator.clipboard.writeText(props.password)
 	emit('copy')
 }
+
+let passLength = computed(() => props.password.length)
 </script>
 
 <template>
 	<div class="pass-item">
-		<p class="pass-text">{{ password }}</p>
+		<p class="pass-text">{{ password }} - <em>({{ passLength }})</em></p>
 		<div class="buttons">
-			<button class="btn del">DELETE</button>
+			<button class="btn del"
+				@click="() => emit('on-delete', index)"
+			>
+				DELETE
+			</button>
 			<button class="btn copy"
 				@click="copyPassword"
 			>
@@ -30,7 +38,8 @@ const copyPassword = () => {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	gap: 2rem;
+
+	min-width: 90%;
 
 	background-color: #eee;
 	border: 2px solid #ddd;

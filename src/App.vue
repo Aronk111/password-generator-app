@@ -44,7 +44,6 @@ const previousPasswords = reactive(
 		passwords: []
 	}
 )
-console.log(previousPasswords.value);
 
 const addPassword = (pass) => {
 	previousPasswords["passwords"].push(pass)
@@ -61,6 +60,11 @@ const displayModal = () => {
 	modalTimeout = setTimeout(() => {
 		showModal.value = false
 	}, 2000);
+}
+
+const deletePassword = (atIndex) => {
+	previousPasswords.passwords.splice(atIndex, 1)
+	localStorage.setItem('prevPasses', JSON.stringify(previousPasswords))
 }
 
 </script>
@@ -80,13 +84,14 @@ const displayModal = () => {
 			@pass-change="(newValue) => {changeSetting('length', newValue)}"
 			:initial-value="generationSettings.length"
 		/>
-		<Generator @generate="(val) => addPassword(val)"></Generator>
+		<Generator :settings="generationSettings" @generate="(val) => addPassword(val)"></Generator>
 	</div>
 	<div id="generator-page" v-else-if="activeLinkIndex === 1">
 		<PreviousPasses
 			:initialValue="previousPasswords"
 			:passes="previousPasswords"
 			@copied="displayModal"
+			@deleted="deletePassword"
 		/>
 		<div class="modalOK" :class="{'modal-hidden': showModal === false}">
 			<p>Copied Password</p>

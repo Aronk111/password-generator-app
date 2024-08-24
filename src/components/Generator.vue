@@ -3,13 +3,14 @@ import { ref } from 'vue';
 import { generate } from '../composables/passGen';
 
 const emit = defineEmits(['generate'])
+const props = defineProps(['settings'])
 
 const currentPass = ref(
 	JSON.parse(localStorage.getItem('currentPass'))??""
 )
 
 const makePassword = () => {
-	currentPass.value = generate(32)
+	currentPass.value = generate(props.settings.length)
 	emit('generate', currentPass.value)
 	localStorage.setItem('currentPass', JSON.stringify(
 		currentPass.value
