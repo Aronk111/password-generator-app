@@ -14,6 +14,8 @@ const makePassword = () => {
 		props.settings.length,
 		props.settings.useUpper,
 		props.settings.useNums,
+		props.settings.useSurround,
+		props.settings.surroundChar
 	)
 	emit('generate', currentPass.value)
 	localStorage.setItem('currentPass', JSON.stringify(

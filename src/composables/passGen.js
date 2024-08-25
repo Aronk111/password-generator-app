@@ -1,7 +1,7 @@
 const ALPHA = 'abcdefghijklmnopqrstuvwxyz'
 const NUM = '0123456789'
 
-const generate = (length, useUpper, useNum) => {
+const generate = (length, useUpper, useNum, useSurround, surroundChar) => {
 	const possibleCharacters = (ALPHA + NUM).split('')
 
 	let newPassword = ""
@@ -24,6 +24,13 @@ const generate = (length, useUpper, useNum) => {
 
 		newPassword += currentCharacter
 	}
+
+	if (useSurround) {
+		let char = surroundChar ?? '*'
+		newPassword = `${char}${newPassword.slice(1, -1)}${char}`
+		console.log(newPassword);
+	}
+
 	return newPassword
 }
 

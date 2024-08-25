@@ -8,6 +8,8 @@ import Generator from './components/Generator.vue';
 import PreviousPasses from './components/PreviousPasses.vue';
 import UppercaseSetting from './components/UppercaseSetting.vue';
 import NumberSetting from './components/NumberSetting.vue';
+import SurroundSetting from './components/SurroundSetting.vue';
+import AboutView from './views/AboutView.vue';
 
 const showModal = ref(false)
 
@@ -34,7 +36,9 @@ const generationSettings = ref(
 	JSON.parse(localStorage.getItem('genSettings'))??{
 		length: 16,
 		useUpper: false,
-		useNums: false
+		useNums: false,
+		useSurround: false,
+		surroundChar: '*'
 	}
 )
 
@@ -74,7 +78,10 @@ const deletePassword = (atIndex) => {
 </script>
 
 <template>
-	<h1 class="page-title">Password Generator</h1>
+	<header>
+		<img src="./assets/key-icon.png" alt="key icon" >
+		<h1 class="page-title">Password Generator</h1>
+	</header>
 	<NavBar
 		:links=links
 		:activeIndex="activeLinkIndex"
@@ -88,9 +95,27 @@ const deletePassword = (atIndex) => {
 			@pass-change="(newValue) => {changeSetting('length', newValue)}"
 			:initial-value="generationSettings.length"
 		/>
-		<UppercaseSetting :initialValue="generationSettings.useUpper" @upper-changed="(newValue) => {changeSetting('useUpper', newValue)}"/>
-		<NumberSetting :initialValue="generationSettings.useNums" @nums-changed="(newValue) => {changeSetting('useNums', newValue)}" />
-		<Generator :settings="generationSettings" @generate="(val) => addPassword(val)"></Generator>
+		<UppercaseSetting
+			:initialValue="generationSettings.useUpper"
+			@upper-changed="(newValue) => {changeSetting('useUpper', newValue)}"
+		/>
+
+		<NumberSetting
+			:initialValue="generationSettings.useNums"
+			@nums-changed="(newValue) => {changeSetting('useNums', newValue)}"
+		/>
+
+		<SurroundSetting
+			:initState="generationSettings.useSurround"
+			:initChar="generationSettings.surroundChar"
+			@char-changed="(newValue) => {changeSetting('surroundChar', newValue)}"
+			@surround-changed="(newValue) => {changeSetting('useSurround', newValue)}"
+		/>
+
+		<Generator
+			:settings="generationSettings"
+			@generate="(val) => addPassword(val)"
+		/>
 	</div>
 	<div id="generator-page" v-else-if="activeLinkIndex === 1">
 		<PreviousPasses
@@ -103,9 +128,32 @@ const deletePassword = (atIndex) => {
 			<p>Copied Password</p>
 		</div>
 	</div>
+	<div v-else>
+		<AboutView></AboutView>
+	</div>
 </template>
 
 <style>
+header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+
+	padding: 1rem 0;
+	background-color: #4169e140;
+}
+
+header > img {
+	transition: all 150ms ease-in-out;
+	display: inline-block;
+	width: 75px;
+}
+
+header > img:hover {
+	transform: rotate(10deg) translateY(-5%);
+}
+
 #generator-page {
 	position: relative;
 }
@@ -129,5 +177,11 @@ const deletePassword = (atIndex) => {
 .modal-hidden {
 	left: -100%;
 	visibility: hidden;
+}
+
+@media only screen and (max-width: 640px) {
+	header {
+		flex-direction: column;
+	}
 }
 </style>
