@@ -10,7 +10,11 @@ const currentPass = ref(
 )
 
 const makePassword = () => {
-	currentPass.value = generate(props.settings.length)
+	currentPass.value = generate(
+		props.settings.length,
+		props.settings.useUpper,
+		props.settings.useNums,
+	)
 	emit('generate', currentPass.value)
 	localStorage.setItem('currentPass', JSON.stringify(
 		currentPass.value

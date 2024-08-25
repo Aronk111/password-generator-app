@@ -6,6 +6,8 @@ import NavBar from './components/NavBar.vue';
 import LengthSetting from './components/LengthSetting.vue';
 import Generator from './components/Generator.vue';
 import PreviousPasses from './components/PreviousPasses.vue';
+import UppercaseSetting from './components/UppercaseSetting.vue';
+import NumberSetting from './components/NumberSetting.vue';
 
 const showModal = ref(false)
 
@@ -30,7 +32,9 @@ const links = ref([
 
 const generationSettings = ref(
 	JSON.parse(localStorage.getItem('genSettings'))??{
-		length: 16
+		length: 16,
+		useUpper: false,
+		useNums: false
 	}
 )
 
@@ -84,6 +88,8 @@ const deletePassword = (atIndex) => {
 			@pass-change="(newValue) => {changeSetting('length', newValue)}"
 			:initial-value="generationSettings.length"
 		/>
+		<UppercaseSetting :initialValue="generationSettings.useUpper" @upper-changed="(newValue) => {changeSetting('useUpper', newValue)}"/>
+		<NumberSetting :initialValue="generationSettings.useNums" @nums-changed="(newValue) => {changeSetting('useNums', newValue)}" />
 		<Generator :settings="generationSettings" @generate="(val) => addPassword(val)"></Generator>
 	</div>
 	<div id="generator-page" v-else-if="activeLinkIndex === 1">
